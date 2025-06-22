@@ -30,3 +30,19 @@
 *.exe
 *.out
 *.app
+
+# Ignore build and output directories
+/build/
+/out/
+/Debug/
+/Release/
+/x64/
+/*.vcxproj.*
+/*.sln
+/.vs
+
+# Ignore CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
