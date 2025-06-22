@@ -33,3 +33,19 @@ int value;
 if (q.get(value)) { /* use value */ }
 ```
 
+
+
+---
+
+### Benchmark Results (10M ops)
+
+| Run | `std::queue` + `std::mutex` | `SPSCQueue` |
+| --- | --------------------------- | ----------- |
+| 1   | 10317 ms                    | 1631 ms     |
+| 2   | 10753 ms                    | 1412 ms     |
+| 3   | 11679 ms                    | 1514 ms     |
+| 4   | 10266 ms                    | 1342 ms     |
+| 5   | 10627 ms                    | 1261 ms     |
+
+**Average speedup**: \~7–8x faster under SPSC conditions.
+
