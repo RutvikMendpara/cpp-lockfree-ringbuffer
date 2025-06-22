@@ -38,6 +38,8 @@ if (q.get(value)) { /* use value */ }
 ---
 
 ### Benchmark Results (10M ops)
+> **Benchmarked on**: AMD Ryzen 5 3550H, 16GB RAM, Windows 11, 10M ops per run.
+
 
 | Run | `std::queue` + `std::mutex` | `SPSCQueue` |
 | --- | --------------------------- | ----------- |
