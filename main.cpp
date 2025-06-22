@@ -1,28 +1,40 @@
 #include <iostream>
+#include <thread>
 #include "ring_buffer_single_threaded.h"
+#include "spsc_ring_buffer.h"
+
+SPSCQueue spsc_q;
+
+void producer() {
+	for (int i = 0; i < 1500; ++i) {
+		while (!spsc_q.put(i)) {
+			// busy-wait
+		}
+	}
+}
+
+
+void consumer() {
+	int val;
+	for (int i = 0; i < 1500; ++i) {
+		while (!spsc_q.get(val)) {
+			// busy-wait
+		}
+		std::cout << val << "\n";
+	}
+}
+
 
 int main() {
-	/*
-		Single-threaded ring buffer.
-		Not thread-safe. Not lock-free.
-		Capacity is (N - 1) due to reserved slot for full/empty distinction.
-		Writes are rejected when full; reads are rejected when empty.
-		Indexing is always in bounds - no overflow risk by design.
-	*/
 
-	RingBuffer q;
-	std::cout << "q.isEmpty() " << q.isEmpty() << std::endl;
-	for (int i = 0; i < 5; ++i) {
-		std::cout << "put(" << i << ") => " << q.put(i) << "\n";
-	}
+	std::thread prod(producer);
+	std::thread cons(consumer);
 
-	std::cout << "q.capacity() " << q.capacity() << std::endl;
-	std::cout << "q.isEmpty() " << q.isEmpty() << std::endl;
-	int val;
-	while (q.get(val)) {
-		std::cout << "get: " << val << "\n";
-	}
+	prod.join();
+	cons.join();
 
-	std::cout << "q.isEmpty() " << q.isEmpty() << std::endl;
+	std::cout << "Test complete\n";
+
+
 	return 0;
 }

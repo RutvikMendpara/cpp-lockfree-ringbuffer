@@ -1,4 +1,11 @@
 #pragma once
+/*
+        Single-threaded ring buffer.
+        Not thread-safe. Not lock-free.
+        Capacity is (N - 1) due to reserved slot for full/empty distinction.
+        Writes are rejected when full; reads are rejected when empty.
+        Indexing is always in bounds - no overflow risk by design.
+*/
 
 class RingBuffer {
 public:

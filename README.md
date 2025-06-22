@@ -1,2 +1,35 @@
-# cpp-lockfree-ringbuffer
-My C++implementation of lock-free ring-buffer
+# spsc_ring_buffer (Single Producer Single Consumer Ring Buffer)
+
+## Overview:
+- Lock free SPSC ring buffer using `std::atomic`.
+- Optimized for high throughput communication between exactly **one producer and one consumer thread**.
+- Uses a fixed size circular buffer with **power of two capacity** to enable bitmasking instead of modulo.
+
+## Key Properties:
+- Non blocking `put()` and `get()` operations (no locks or mutexes).
+- Thread safe only under strict SPSC usage.
+- Efficient wrapping using bitmask `(index  & (size - 1))`, requires m_size to be power of two.
+
+## Memory Ordering:
+- put():
+	- Uses `memory_order_relaxed` to read `write_index`.
+	- Uses `memory_order_release` to publish writes.
+- get():
+	- Uses `memory_order_relaxed` to read `read_index`.
+	- Uses `memory_order_release` after consuming data.
+- `memory_order_acquire` ensures visibility of cross thread writes.
+
+## Limitations:
+- **SPSC-only:** exactly one thread must produce, and exactly one must consume. Anything else = undefined behavior.
+- Effective capacity is `m_size - 1` (one slot is reserved to differentiate full vs empty).
+- No dynamic resizing . Fixed buffer at construction.
+– No blocking or sleep, uses busy spin loops for contention handling.
+
+## Usage Example:
+```
+SPSCQueue q;
+q.put(42);
+int value;
+if (q.get(value)) { /* use value */ }
+```
+
