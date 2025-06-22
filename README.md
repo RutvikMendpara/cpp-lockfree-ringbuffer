@@ -1,4 +1,4 @@
-# spsc_ring_buffer (Single Producer Single Consumer Ring Buffer)
+# Lock free SPSC Ring Buffer (Single Producer Single Consumer Ring Buffer)
 
 ## Overview:
 - Lock free SPSC ring buffer using `std::atomic`.
