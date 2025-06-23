@@ -11,13 +11,14 @@
 - Efficient wrapping using bitmask `(index  & (size - 1))`, requires m_size to be power of two.
 
 ## Memory Ordering:
-- put():
+- `put()`:
 	- Uses `memory_order_relaxed` to read `write_index`.
-	- Uses `memory_order_release` to publish writes.
-- get():
+	- Uses `memory_order_acquire` to read `read_index` (consumer progress).
+	- Uses `memory_order_release` to publish `write_index` (after writing data).
+- `get()`:
 	- Uses `memory_order_relaxed` to read `read_index`.
-	- Uses `memory_order_release` after consuming data.
-- `memory_order_acquire` ensures visibility of cross thread writes.
+	- Uses `memory_order_acquire` to read `write_index` (producer progress).
+	- Uses `memory_order_release` to publish `read_index` (after consuming data).
 
 ## Limitations:
 - **SPSC-only:** exactly one thread must produce, and exactly one must consume. Anything else = undefined behavior.
@@ -30,16 +31,16 @@
 SPSCQueue q;
 q.put(42);
 int value;
-if (q.get(value)) { /* use value */ }
+if (q.get(value)) { 
+/* use value */ 
+}
 ```
-
 
 
 ---
 
 ### Benchmark Results (10M ops)
 > **Benchmarked on**: AMD Ryzen 5 3550H, 16GB RAM, Windows 11, 10M ops per run.
-
 
 | Run | `std::queue` + `std::mutex` | `SPSCQueue` |
 | --- | --------------------------- | ----------- |
