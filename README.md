@@ -52,3 +52,5 @@ if (q.get(value)) {
 
 **Average speedup**: \~7–8x faster under SPSC conditions.
 
+> This is a minimal, lock-free, SPSC queue implemented from scratch for performance benchmarking. It prioritizes clarity, memory ordering correctness, and high-throughput under single-producer/single-consumer constraints.
+

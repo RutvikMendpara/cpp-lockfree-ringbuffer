@@ -16,7 +16,7 @@ private:
     static_assert((m_size& (m_size - 1)) == 0, "m_size must be power of two");
 
     int m_buffer[m_size];
-
-    std::atomic<int> m_write_index{ 0 };
-    std::atomic<int> m_read_index{ 0 };
+    // Align to 64 bytes to avoid false sharing between producer/consumer threads
+    alignas(64) std::atomic<int> m_write_index{ 0 };
+    alignas(64) std::atomic<int> m_read_index{ 0 };
 };
